@@ -3,12 +3,17 @@ import { CitiesService } from 'src/cities/cities.service';
 import { ServiceErrors } from 'src/common/enums/errors';
 import { FindManyOptions, Repository } from 'typeorm';
 import { CreateSedeDTO } from './dtos/create.sede.dto';
+import { EditSedeDTO } from './dtos/edit.sede.dto';
 import { Sede } from './entities/sede.entity';
 import { SEDE_REPOSITORY } from './sede.provider';
 
 interface SedeFindOne {
 	id?: number;
 	name?: string;
+}
+
+export enum SedesServiceErrors {
+	LIMIT_USERS = 'LIMIT_USERS',
 }
 
 @Injectable()
@@ -46,5 +51,9 @@ export class SedesService {
 
 		const sede = this.sedeRepository.create({ ...dto, city });
 		return await sede.save();
+	}
+
+	async update(id: number, dto: EditSedeDTO) {
+		return (await this.sedeRepository.update({ id }, dto)).affected;
 	}
 }

@@ -1,6 +1,6 @@
 import { Repository } from 'typeorm';
 import { Inject, Injectable } from '@nestjs/common';
-import { SedesService } from 'src/sedes/sedes.service';
+import { SedesService, SedesServiceErrors } from 'src/sedes/sedes.service';
 import { USER_SEDE_REPOSITORY } from './user.sede.provider';
 import { UserSede } from './user.sede.entity';
 import { UserService } from 'src/user/user.service';
@@ -43,6 +43,8 @@ export class UserSedeService {
 		const sede = await this.sedeService.findOne({ id: sedeId });
 		if (!sede) return ServiceErrors.OBJECT_NOT_EXIST;
 
+		if (sede.userCounter >= 300) return SedesServiceErrors.LIMIT_USERS;
+
 		const result = await this.userService.create(dto);
 		if (typeof result === 'string') return result;
 
@@ -52,6 +54,9 @@ export class UserSedeService {
 				user: result,
 			})
 			.save();
+
+		sede.userCounter = sede.userCounter + 1;
+		sede.save();
 
 		const newUser = { ...result, sedes: [userSede] } as User;
 		return newUser;

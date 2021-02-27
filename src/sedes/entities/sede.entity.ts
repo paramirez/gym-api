@@ -21,11 +21,15 @@ export class Sede extends BaseEntity {
 	@ApiResponseProperty()
 	@Column({ type: 'varchar', length: 240, unique: true })
 	name: string;
+	
+	@Column({ type: 'int', default: 0 })
+	userCounter: number;
 
 	@ApiResponseProperty({ type: () => City })
 	@ManyToOne(() => City, (city) => city.sedes)
 	@JoinColumn({ name: 'id_city' })
 	city: City;
+
 
 	@OneToMany(() => UserSede, (userSede) => userSede.sede)
 	users: UserSede[];
