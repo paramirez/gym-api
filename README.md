@@ -22,6 +22,7 @@ $ npm run start
 $ npm run start:dev
 
 # production mode
+$ npm run build
 $ npm run start:prod
 ```
 
@@ -44,13 +45,9 @@ $ npm run db:migration:run
 
 ## Test
 
+Pruebas unitarias solo en `cities.controller.spect.ts`
+
 ```bash
 # unit tests
 $ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```

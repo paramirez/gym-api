@@ -10,7 +10,9 @@ export const databaseProviders = [
 	{
 		provide: DATABASE_CONNECTION,
 		useFactory: async () => {
-			const config = await getConnectionOptions();
+			const config = await getConnectionOptions(
+				process.env.CONNECTION_NAME,
+			);
 			const newConfig = {
 				...config,
 				entities: config.entities.map((map) => getRoute(map as string)),
@@ -20,6 +22,7 @@ export const databaseProviders = [
 				subscribers: config.subscribers.map((map) =>
 					getRoute(map as string),
 				),
+				name: 'default',
 			};
 			return await createConnection(newConfig);
 		},

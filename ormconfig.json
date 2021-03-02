@@ -1,23 +1,46 @@
-{
-    "type": "mysql",
-    "host": "localhost",
-    "port": 3306,
-    "username": "root",
-    "password": "root",
-    "database": "nueva",
-    "synchronize": false,
-    "entities": [
-        "dist/**/*.entity{.ts,.js}"
-    ],
-    "migrations": [
-        "dist/migration/**/*{.ts,.js}"
-    ],
-    "subscribers": [
-        "dist/**/*.subscriber{.ts,.js}"
-    ],
-    "cli": {
-        "entitiesDir": "src/**/*.entity{.ts,.js}",
-        "migrationsDir": "src/migration",
-        "subscribersDir": "src/**/*.subscriber{.ts,.js}"
+[
+    {
+        "name": "default",
+        "type": "mysql",
+        "host": "localhost",
+        "port": 3306,
+        "username": "root",
+        "password": "root",
+        "database": "nueva",
+        "synchronize": false,
+        "entities": [
+            "dist/**/*.entity{.ts,.js}"
+        ],
+        "migrations": [
+            "dist/migration/**/*{.ts,.js}"
+        ],
+        "subscribers": [
+            "dist/**/*.subscriber{.ts,.js}"
+        ],
+        "cli": {
+            "entitiesDir": "src/**/*.entity{.ts,.js}",
+            "migrationsDir": "src/migration",
+            "subscribersDir": "src/**/*.subscriber{.ts,.js}"
+        }
+    },
+    {
+        "name": "pruebas",
+        "type": "mysql",
+        "host": "localhost",
+        "port": 3306,
+        "username": "root",
+        "password": "root",
+        "database": "prueba",
+        "synchronize": true,
+        "dropSchema": true,
+        "entities": [
+            "dist/**/*.entity{.ts,.js}"
+        ],
+        "migrations": [
+            "dist/migration/**/*{.ts,.js}"
+        ],
+        "subscribers": [
+            "dist/**/*.subscriber{.ts,.js}"
+        ]
     }
-}
+]

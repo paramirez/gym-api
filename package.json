@@ -6,7 +6,6 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -14,11 +13,11 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
+    "test": "cross-env CONNECTION_NAME=pruebas jest --silent=false",
+    "test:watch": "npm run test --watch",
+    "test:cov": "npm run test --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:e2e": "npm run test --config ./test/jest-e2e.json",
     "db:migration:generate": "npm run build && npx typeorm migration:generate -n",
     "db:migration:run": "npm run build && npx typeorm migration:run",
     "db:migration:revert": "npm run build && npx typeorm migration:revert"
@@ -32,11 +31,13 @@
     "@nestjs/passport": "^7.1.5",
     "@nestjs/platform-express": "^7.5.1",
     "@nestjs/swagger": "^4.7.15",
+    "@nestjs/typeorm": "^7.1.5",
     "@types/bcrypt": "^3.0.0",
     "@types/passport-jwt": "^3.0.5",
     "bcrypt": "^5.0.0",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
+    "cross-env": "^7.0.3",
     "mysql": "^2.18.1",
     "nest-access-control": "^2.0.2",
     "passport": "^0.4.1",
@@ -45,6 +46,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.3",
     "swagger-ui-express": "^4.1.6",
+    "tsconfig-paths-jest": "0.0.1",
     "typeorm": "^0.2.31"
   },
   "devDependencies": {
@@ -62,28 +64,12 @@
     "eslint-plugin-prettier": "^3.1.4",
     "jest": "^26.6.3",
     "prettier": "^2.1.2",
+    "sinon": "^9.2.4",
     "supertest": "^6.0.0",
     "ts-jest": "^26.4.3",
     "ts-loader": "^8.0.8",
     "ts-node": "^9.0.0",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^4.0.5"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
   }
 }
