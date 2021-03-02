@@ -20,6 +20,7 @@ interface UserSedeResult {
 	u_roles: string;
 	u_status: number;
 	id_sede: number;
+	s_name: string;
 }
 
 export interface UserResult {
@@ -40,7 +41,10 @@ export class UserSedeService {
 	) {}
 
 	async create(sedeId: number, dto: CreateUserDTO) {
-		const sede = await this.sedeService.findOne({ id: sedeId });
+		const sede = await this.sedeService.findOne(
+			{ id: sedeId },
+			{ relations: ['city'] },
+		);
 		if (!sede) return ServiceErrors.OBJECT_NOT_EXIST;
 
 		if (sede.userCounter >= 300) return SedesServiceErrors.LIMIT_USERS;
@@ -70,9 +74,11 @@ export class UserSedeService {
 	}
 
 	async findUsersBySedeIds(sedes: number[]) {
+		if (!sedes.length) return [];
 		const usersSedes: UserSedeResult[] = await this.userSedeRepository
 			.createQueryBuilder('us')
 			.leftJoinAndSelect('us.user', 'u')
+			.leftJoinAndSelect('us.sede', 's')
 			.where('us.sede IN (:sedes)', { sedes })
 			.select([
 				'us.id_sede',
@@ -81,7 +87,9 @@ export class UserSedeService {
 				'u.email',
 				'u.roles',
 				'u.status',
+				's.name',
 			])
+			.cache(true)
 			.getRawMany();
 
 		return usersSedes
@@ -93,17 +101,27 @@ export class UserSedeService {
 					roles: us.u_roles,
 					status: !!us.u_status,
 				},
+				name: us.s_name,
 				idSede: us.id_sede,
 			}))
-			.reduce((result: { sede: number; users: UserResult[] }[], us) => {
-				const sede = result.find((r) => r.sede === us.idSede);
-				if (!sede)
-					result.push({
-						sede: us.idSede,
-						users: [us.user],
-					});
-				else sede.users.push(us.user);
-				return result;
-			}, []);
+			.reduce(
+				(
+					result: {
+						sede: { id: number; name: string };
+						users: UserResult[];
+					}[],
+					us,
+				) => {
+					const sede = result.find((r) => r.sede.id === us.idSede);
+					if (!sede)
+						result.push({
+							sede: { id: us.idSede, name: us.name },
+							users: [us.user],
+						});
+					else sede.users.push(us.user);
+					return result;
+				},
+				[],
+			);
 	}
 }

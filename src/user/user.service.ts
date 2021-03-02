@@ -36,7 +36,9 @@ export class UserService {
 	}
 
 	async findById(id: number) {
-		return this.userRepository.findOne(id);
+		return this.userRepository.findOne(id, {
+			relations: ['sedes', 'sedes.sede', 'sedes.sede.city'],
+		});
 	}
 
 	async findByEmail(email: string, query: object = {}) {
@@ -72,8 +74,9 @@ export class UserService {
 			}
 		}
 
-		const affected = await (await this.userRepository.update({ id }, user))
-			.affected;
-		return affected;
+		Object.keys(user).forEach((key) => {
+			userUpdate[key] = user[key];
+		});
+		return await this.userRepository.save(userUpdate);
 	}
 }

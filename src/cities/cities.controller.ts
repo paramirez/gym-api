@@ -9,6 +9,7 @@ import {
 	ResponseType,
 	UpdateResponseType,
 } from 'src/common/decorators/swagger.decorator';
+import { MoreThan } from 'typeorm';
 
 @ApiTags('Cities routes')
 @Controller('cities')
@@ -16,10 +17,30 @@ export class CitiesController {
 	constructor(private citiesService: CitiesService) {}
 
 	@ResponseType([City])
-	@AnyRole()
+	@Admin()
+	@Get('all')
+	async allAdmin() {
+		return await this.citiesService.findAll({
+			cache: true,
+		});
+	}
+
+	@ResponseType([City])
+	@Get('withsedes')
+	async allWithSedes() {
+		return await this.citiesService.findAll({
+			where: {
+				sedesCounter: MoreThan(0),
+			},
+		});
+	}
+
+	@ResponseType([City])
 	@Get()
 	async all() {
-		return this.citiesService.findAll();
+		return this.citiesService.findAll({
+			select: ['id', 'name'],
+		});
 	}
 
 	@ResponseType(City)

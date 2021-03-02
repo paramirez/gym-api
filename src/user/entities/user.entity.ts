@@ -2,6 +2,7 @@ import { ApiResponseProperty } from '@nestjs/swagger';
 import { hashSync } from 'bcrypt';
 import { UserSede } from 'src/usersede/user.sede.entity';
 import {
+	AfterLoad,
 	BaseEntity,
 	BeforeInsert,
 	BeforeUpdate,
@@ -19,7 +20,7 @@ export class User extends BaseEntity {
 	id: number;
 
 	@ApiResponseProperty()
-	@Column({ length: 500 })
+	@Column({ length: 500, default: '' })
 	name: string;
 
 	@ApiResponseProperty()
@@ -45,10 +46,18 @@ export class User extends BaseEntity {
 	@OneToMany(() => UserSede, (userSede) => userSede.user)
 	sedes: UserSede[];
 
+	private tempPass: string;
+
+	@AfterLoad()
+	afterUpdate() {
+		this.tempPass = this.password;
+	}
+
 	@BeforeInsert()
 	@BeforeUpdate()
-	async hashPassword() {
+	hashPassword() {
+		if (this.tempPass === this.password) return;
 		if (!this.password) return;
-		this.password = await hashSync(this.password, 10);
+		this.password = hashSync(this.password, 10);
 	}
 }

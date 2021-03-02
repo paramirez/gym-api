@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CitiesService } from 'src/cities/cities.service';
 import { ServiceErrors } from 'src/common/enums/errors';
-import { FindManyOptions, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { CreateSedeDTO } from './dtos/create.sede.dto';
 import { EditSedeDTO } from './dtos/edit.sede.dto';
 import { Sede } from './entities/sede.entity';
@@ -31,15 +31,15 @@ export class SedesService {
 		return this.sedeRepository.find(query);
 	}
 
-	async all(data = {}) {
+	async all(data = {}, options?: Partial<FindManyOptions<Sede>>) {
 		return await this.sedeRepository.find({
 			where: { ...data },
-			loadRelationIds: true,
+			...options,
 		});
 	}
 
-	async findOne(sede: SedeFindOne) {
-		return await this.sedeRepository.findOne(sede);
+	async findOne(sede: SedeFindOne, options?: FindOneOptions<Sede>) {
+		return await this.sedeRepository.findOne(sede, { ...options });
 	}
 
 	async create(dto: CreateSedeDTO) {

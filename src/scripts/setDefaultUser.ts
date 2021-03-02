@@ -3,8 +3,12 @@ import { User } from 'src/user/entities';
 import { AppRoles } from 'src/common/enums/roles';
 import { City } from 'src/cities/entities/city.entity';
 import { Sede } from 'src/sedes/entities/sede.entity';
+import { Logger } from '@nestjs/common';
 
 const setDefaultUser = async () => {
+	Logger.debug(
+		' -------------------------- Running initial script --------------------------',
+	);
 	const userRepository = getRepository<User>(User);
 	const cityRepository = getRepository<City>(City);
 	const sedeRepository = getRepository<Sede>(Sede);

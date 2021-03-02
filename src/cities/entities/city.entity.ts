@@ -18,6 +18,12 @@ export class City extends BaseEntity {
 	@Column({ type: 'varchar', length: 128, unique: true })
 	name: string;
 
+	@Column({ type: 'int', default: 0 })
+	userCounter: number;
+
+	@Column({ type: 'int', default: 0 })
+	sedesCounter: number;
+
 	@ApiResponseProperty({ type: [Sede] })
 	@OneToMany(() => Sede, (sede) => sede.city)
 	sedes: Sede[];

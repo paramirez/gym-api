@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ServiceErrors } from 'src/common/enums/errors';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { CITY_REPOSITORY } from './city.provider';
 import { CityDTO } from './dtos/city.dto';
 import { City } from './entities/city.entity';
@@ -16,8 +16,8 @@ export class CitiesService {
 		@Inject(CITY_REPOSITORY) private cityRepository: Repository<City>,
 	) {}
 
-	async findAll() {
-		return await this.cityRepository.find();
+	async findAll(options?: FindManyOptions<City>) {
+		return await this.cityRepository.find({ ...options });
 	}
 
 	async findOne(city: CityFindOne) {

@@ -23,22 +23,57 @@ export class SedesController {
 
 	@ResponseType([Sede])
 	@Admin()
-	@Get('city/:city')
-	async getByCityId(@Param('city') city: number) {
+	@Get('admin/city/:city')
+	async getSedesByCityId(@Param('city') city: number) {
 		return await this.sedesService.all({ city });
 	}
 
-	@ResponseType(Sede)
+	@ResponseType([Sede])
+	@Get('city/:city')
+	async getByCityId(@Param('city') city: number) {
+		return await this.sedesService.all(
+			{ city },
+			{
+				select: ['id', 'name'],
+			},
+		);
+	}
+
+	@ResponseType([Sede])
 	@Admin()
+	@Get('/users')
+	async getAllWithUsers() {
+		return await this.sedesService.all({}, { loadRelationIds: true });
+	}
+
+	@ResponseType([Sede])
+	@Admin()
+	@Get('all')
+	async getSedeAll() {
+		return await this.sedesService.all(
+			{},
+			{
+				relations: ['city'],
+				cache: true,
+			},
+		);
+	}
+
+	@ResponseType(Sede)
 	@Get(':id')
 	async getOne(@Param('id') id: number) {
 		return { sede: (await this.sedesService.findOne({ id })) || {} };
 	}
 
 	@ResponseType([Sede])
-	@Admin()
 	@Get()
 	async getAll() {
-		return await this.sedesService.all();
+		return await this.sedesService.all(
+			{},
+			{
+				select: ['id', 'name'],
+				cache: true,
+			},
+		);
 	}
 }

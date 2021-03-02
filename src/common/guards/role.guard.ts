@@ -26,11 +26,6 @@ export class RoleGuard implements CanActivate {
 		const request = ctx.switchToHttp().getRequest();
 		const user: JwtPayload = request.user;
 		if (!user) throw new UnauthorizedException();
-		const resultSert = [
-			{
-				implementar: 1,
-			},
-		];
 		return matchRoles(user.roles, roles);
 	}
 }
